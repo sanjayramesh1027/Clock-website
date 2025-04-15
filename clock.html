@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Clock</title>
+
+  <style>
+    /* === Default dark mode colors === */
+    :root {
+      --bg-color: #121212;
+      --text-color: #ff1e00;
+    }
+
+    /* === Light mode overrides === */
+    body.light {
+      --bg-color: #ffffff;
+      --text-color: #0707ff;
+    }
+
+    /* === Page styling === */
+    body {
+      
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color); /* Uses CSS variable */
+      color: var(--text-color);          /* Uses CSS variable */
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: background-color 0.3s, color 0.3s; /* Smooth theme change */
+    }
+
+    /* === Styling for clock === */
+    #clock {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* === Styling for date === */
+    #date {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* === Styling for time zone info === */
+    #timezone {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* === Styling for theme toggle button === */
+    #toggle-btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--text-color); /* Inverse for visibility */
+      color: var(--bg-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* === Button hover effect === */
+    #toggle-btn:hover {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Digital clock -->
+  <div id="clock">--:--:--</div>
+
+  <!-- Formatted date display -->
+  <div id="date">Loading date...</div>
+
+  <!-- Time zone info -->
+  <div id="timezone">Time zone: Detecting...</div>
+
+  <!-- Button to switch between light and dark mode -->
+  <button id="toggle-btn">Toggle Dark/Light Mode</button>
+
+  <script>
+    // Get references to elements
+    const clockEl = document.getElementById("clock");
+    const dateEl = document.getElementById("date");
+    const timezoneEl = document.getElementById("timezone");
+    const toggleBtn = document.getElementById("toggle-btn");
+
+    // Function to update clock, date, and time zone
+    function updateClock() {
+      const now = new Date();
+
+      // Show current time in HH:MM:SS format
+      clockEl.textContent = now.toLocaleTimeString();
+
+      // Show current full date
+      dateEl.textContent = now.toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+      // Detect and display the user's time zone
+      timezoneEl.textContent = "Time zone: " + Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
+    // Run updateClock() every second
+    setInterval(updateClock, 1000);
+
+    // Call it once immediately to avoid delay
+    updateClock();
+
+    // Add click event to toggle between dark and light mode
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("light"); // Toggle 'light' class on <body>
+    });
+  </script>
+</body>
+</html>
